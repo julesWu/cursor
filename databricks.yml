@@ -1,0 +1,90 @@
+bundle:
+  name: acme-corp-dashboard
+  
+variables:
+  catalog:
+    description: "Catalog name for data storage"
+    default: "main"
+    
+  schema:
+    description: "Schema name for dashboard data" 
+    default: "acme_corp"
+    
+  app_name:
+    description: "Application name"
+    default: "acme-corp-dashboard"
+
+resources:
+  apps:
+    acme_corp_dashboard:
+      name: ${var.app_name}
+      description: "ACME Corp Campaign Performance Dashboard - Interactive analytics for adtech campaign performance"
+      
+      # Source configuration
+      source_code_path: ./
+      
+      # Environment variables
+      env:
+        - name: PYTHONPATH
+          value: "/Workspace${workspace.file_path}"
+        - name: STREAMLIT_SERVER_HEADLESS
+          value: "true"
+        - name: STREAMLIT_SERVER_PORT
+          value: "8501"
+        - name: STREAMLIT_BROWSER_GATHER_USAGE_STATS  
+          value: "false"
+        - name: ACME_CATALOG
+          value: ${var.catalog}
+        - name: ACME_SCHEMA  
+          value: ${var.schema}
+
+targets:
+  dev:
+    default: true
+    mode: development
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+      root_path: /Users/julia.wu@company.com/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      user_name: julia.wu@company.com
+    variables:
+      catalog: "main"
+      schema: "acme_corp_dev"
+      
+  staging:
+    mode: production  
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}  
+    run_as:
+      service_principal_name: "${bundle.name}-staging-sp"
+    variables:
+      catalog: "main"
+      schema: "acme_corp_staging"
+      
+  prod:
+    mode: production
+    workspace: 
+      host: https://e2-demo-field-eng.cloud.databricks.com
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      service_principal_name: "${bundle.name}-prod-sp"  
+    variables:
+      catalog: "main"
+      schema: "acme_corp_prod"
+
+include:
+  - "*.py"
+  - "requirements.txt" 
+  - "README.md"
+  - "*.yml"
+  - "*.yaml"
+  
+exclude:
+  - "venv/**"
+  - "__pycache__/**"
+  - "*.pyc"
+  - ".git/**" 
+  - "*.log"
+  - ".DS_Store"
+  - ".streamlit/**"

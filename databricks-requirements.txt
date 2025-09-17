@@ -1,0 +1,26 @@
+# Databricks-optimized requirements for ACME Corp Dashboard
+# Core framework
+streamlit==1.28.1
+
+# Data manipulation - use versions compatible with Databricks Runtime
+pandas>=1.5.0,<2.2.0
+numpy>=1.21.0,<1.25.0
+
+# Visualization
+plotly>=5.15.0,<6.0.0
+
+# Synthetic data generation
+faker>=19.0.0,<20.0.0
+
+# Date/time utilities
+python-dateutil>=2.8.0
+pytz>=2022.1
+
+# Optional performance improvements for Databricks
+# These are often pre-installed in Databricks Runtime
+# pandas[performance]
+# pyarrow>=10.0.0
+
+# Databricks-specific packages (if needed)
+# databricks-sql-connector
+# databricks-sdk

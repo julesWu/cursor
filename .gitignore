@@ -33,6 +33,11 @@ venv.bak/
 # Streamlit
 .streamlit/
 streamlit.log
+*.log
+
+# Databricks Bundle deployment artifacts
+.databricks/
+.bundle/
 
 # IDE
 .vscode/
